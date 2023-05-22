@@ -10,6 +10,7 @@ import 'package:ssh2/ssh2.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class HomePage extends StatefulWidget {
+  static final ROUTE='home';
   const HomePage({Key? key}) : super(key: key);
 
   @override
@@ -523,7 +524,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(25.0),
                     child: GridView.count(
                       crossAxisCount: 6, // number of columns
-                      crossAxisSpacing: 25.0, // spacing between columns
+                      crossAxisSpacing: 25.0, // spacing between columns 
                       mainAxisSpacing: 25.0, // spacing between rows
 
                       children: <Widget>[
@@ -1074,7 +1075,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            Navigator.push( context,MaterialPageRoute(builder: (context) => record()));
+                            Navigator.pushNamed(context,record.ROUTE);
                             setState(() {
                               camera = !camera;
                             });

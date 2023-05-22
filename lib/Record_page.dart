@@ -10,6 +10,7 @@ import 'package:tablet_design/home_page.dart';
 
 
 class record extends StatefulWidget {
+  static final ROUTE='video';
   const record( {Key? key}) : super(key: key);
   @override
   State<record> createState() => _recordState();
