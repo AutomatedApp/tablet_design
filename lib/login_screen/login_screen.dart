@@ -15,6 +15,8 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool password = true;
+  var selectLecture;
+  var selectTopic;
   Icon ic = Icon(Icons.remove_red_eye_outlined);
   var emailController = TextEditingController();
   var passwordController = TextEditingController();
@@ -56,8 +58,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Image.asset(
                     ImageAssets.logo,
-                    width: 200,
-                    height: 200,
+                    width: 160,
+                    height: 160,
                     alignment: Alignment.center,
                   ),
                   SizedBox(
@@ -135,6 +137,101 @@ class _LoginScreenState extends State<LoginScreen> {
                           width: 1.0,
                         ),
                       ),
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: DropdownButton(
+                      isExpanded: true,
+                      hint: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          'Select ِAcademic Year',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: 'Microsoft PhagsPa',
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF006782),
+                          ),
+                        ),
+                      ),
+                      items: [
+                        "First Year",
+                        " Second Year",
+                        "Third Year",
+                        "Fourth Year"
+                      ]
+                          .map((AcademicYear) => DropdownMenuItem(
+                        child: Padding(
+                          padding:
+                          const EdgeInsets.only(left: 20),
+                          child: Text(
+                            "$AcademicYear",
+                            style: TextStyle(
+                              fontSize: 18.0,
+                              fontFamily: 'Microsoft PhagsPa',
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF006782),
+                            ),
+                          ),
+                        ),
+                        value: AcademicYear,
+                      ))
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          selectLecture = val;
+                        });
+                      },
+                      value: selectLecture,
+                    ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: DropdownButton(
+                      isExpanded: true,
+                      hint: Padding(
+                        padding: const EdgeInsets.only(left: 20),
+                        child: Text(
+                          'Select ِTopic',
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontFamily: 'Microsoft PhagsPa',
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF006782),
+                          ),
+                        ),
+                      ),
+                      items: [
+                        "Lecture",
+                        " Event",
+                        "Othter",
+                      ]
+                          .map((Topic) => DropdownMenuItem(
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 20),
+                            child: Text(
+                              "$Topic",
+                              style: TextStyle(
+                                fontSize: 18.0,
+                                fontFamily: 'Microsoft PhagsPa',
+                                fontWeight: FontWeight.bold,
+                                color: Color(0xFF006782),
+                              ),
+                            ),
+                          ),
+                          value: Topic))
+                          .toList(),
+                      onChanged: (val) {
+                        setState(() {
+                          selectTopic = val;
+                        });
+                      },
+                      value: selectTopic,
                     ),
                   ),
                   SizedBox(
