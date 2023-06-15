@@ -7,6 +7,7 @@ import 'package:tablet_design/speechAPI.dart';
 import 'package:tablet_design/weather/model/weather.dart';
 import 'package:tablet_design/weather/services/weather_service.dart';
 import 'package:ssh2/ssh2.dart';
+import 'package:alan_voice/alan_voice.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
 class HomePage extends StatefulWidget {
@@ -18,6 +19,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  _HomePageState(){
+    AlanVoice.addButton("575866fc9a1a207a5cf6554716aa06af2e956eca572e1d8b807a3e2338fdd0dc/stage",buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT,);
+    AlanVoice.onCommand.add((command)=>handel_command(command.data));
+
+  }
+
   String path = '192.168.1.30';
 
   bool led1 = false;
@@ -55,7 +62,157 @@ class _HomePageState extends State<HomePage> {
     _sshClient?.disconnect();
     super.dispose();
   }
+  void handel_command(Map<String,dynamic>command){
+    switch(command['command']){
+      case'forward':
+        Navigator.pushNamed(context,record.ROUTE);
+        break;
+      case'back':
+        Navigator.pop(context);
+        break;
+      case 'led1':
+        setState(() {
+          led1 = true;
+        });
+        Uri.http(path, '/on1');
+        break;
+      case'off1':
+          setState(() {
+            led1 = false;
+          });
+          Uri.http(path, '/off1');
+          break;
+      case 'led2':
+        setState(() {
+          led2 = true;
+        });
+        Uri.http(path, '/on2');
+        break;
+      case'off2':
+        setState(() {
+          led2 = false;
+        });
+        Uri.http(path, '/off2');
+        break;
+      case 'led3':
+        setState(() {
+          led3 = true;
+        });
+        Uri.http(path, '/on3');
+        break;
+      case'off3':
+        setState(() {
+          led3 = false;
+        });
+        Uri.http(path, '/off3');
+        break;
+      case 'led4':
+        setState(() {
+          led4 = true;
+        });
+        Uri.http(path, '/on4');
+        break;
+      case'off4':
+        setState(() {
+          led4 = false;
+        });
+        Uri.http(path, '/off4');
+        break;
+      case 'led5':
+        setState(() {
+          led5 = true;
+        });
+        Uri.http(path, '/on5');
+        break;
+      case'off5':
+        setState(() {
+          led5 = false;
+        });
+        Uri.http(path, '/off5');
+        break;
+      case 'led6':
+        setState(() {
+          led6 = true;
+        });
+        Uri.http(path, '/on6');
+        break;
+      case'off6':
+        setState(() {
+          led6 = false;
+        });
+        Uri.http(path, '/off6');
+        break;
+      case 'fan1':
+        setState(() {
+          fan1 = true;
+        });
+        Uri.http(path, '/f_on1');
+        break;
+      case'off7':
+        setState(() {
+          fan1 = false;
+        });
+        Uri.http(path, '/f_off1');
+        break;
+      case 'fan2':
+        setState(() {
+          fan2 = true;
+        });
+        Uri.http(path, '/f_on2');
+        break;
+      case'off8':
+        setState(() {
+          fan2 = false;
+        });
+        Uri.http(path, '/f_off2');
+        break;
+      case 'fan1':
+        setState(() {
+          fan3 = true;
+        });
+        Uri.http(path, '/f_on3');
+        break;
+      case'off9':
+        setState(() {
+          fan3 = false;
+        });
+        Uri.http(path, '/f_off3');
+        break;
+      case'on all':
+          setState(() {
+            led1 = true;
+            led2 = true;
+            led3 = true;
+            led4 = true;
+            led5 = true;
+            led6 = true;
+          });
+          Uri.http(path, '/on1');
+          Uri.http(path, '/on2');
+          Uri.http(path, '/on3');
+          Uri.http(path, '/on4');
+          Uri.http(path, '/on5');
+          Uri.http(path, '/on6');
+        break;
+      case'off all':
+          setState(() {
+            led1 = false;
+            led2 = false;
+            led3 = false;
+            led4 = false;
+            led5 = false;
+            led6 = false;
+          });
+          Uri.http(path, '/off1');
+          Uri.http(path, '/off2');
+          Uri.http(path, '/off3');
+          Uri.http(path, '/off4');
+          Uri.http(path, '/off5');
+          Uri.http(path, '/off6');
+        break;
+    }
 
+  }
   Future toggleRecording() => SpeechAPI.toggleRecording(
     onResult: (text) => setState(() => this.text =text),
     onListening: (isListening) {
