@@ -49,17 +49,14 @@ class _HomePageState extends State<HomePage> {
 
   bool isListening = false;
   String text = '';
-  SSHClient? _sshClient;
 
   @override
   void initState() {
-    _connectToRaspberryPi();
     super.initState();
     getWeather();
   }
   @override
   void dispose() {
-    _sshClient?.disconnect();
     super.dispose();
   }
   void handel_command(Map<String,dynamic>command){
@@ -381,14 +378,6 @@ class _HomePageState extends State<HomePage> {
     print(weather.temperatureC);
     print(weather.temperatureF);
     print(weather.condition);
-  }
-  Future<void> _connectToRaspberryPi() async {
-    final sshHelper = SshHelper(
-      host: '192.168.1.50',
-      username: 'pi',
-      password: 'yasser',
-    );
-    _sshClient = await sshHelper.connect();
   }
   @override
   Widget build(BuildContext context) {
