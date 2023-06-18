@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:ssh2/ssh2.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:tablet_design/core/utils/app_colors.dart';
 class constants{
-  static void record_video({required BuildContext context,required var msg,required var name,required var path,required Function fun}){
+  static void record_video({required BuildContext context,required var sshClient,required StopWatchTimer stopWatch,required var name,required var path,required TextEditingController namecontroller,required TextEditingController pathcontroller}){
     var formKey = GlobalKey<FormState>();
+     stopWatch= StopWatchTimer();
     showDialog(context: context, builder: (context)=>
         Form(
           key: formKey,
@@ -24,6 +26,7 @@ class constants{
                   return null;
                 },
                 keyboardType: TextInputType.name,
+                controller: namecontroller,
                 decoration: InputDecoration(
                   labelText: 'name'.tr,
                   border: OutlineInputBorder(
@@ -37,6 +40,7 @@ class constants{
               ),
               SizedBox(height: 20,),
               TextFormField(
+                controller: pathcontroller,
                 onChanged: (data){
                   path=data.trim();
                 },
@@ -69,7 +73,19 @@ class constants{
                     fontSize: 20.0,
                     color: Colors.black,
                   ),)),
-                  TextButton(onPressed: fun(), child: Text('Ok',style: TextStyle(
+                  TextButton(onPressed: ()async{
+                    stopWatch.onExecute.add(StopWatchExecute.start);
+                    namecontroller.clear();
+                    pathcontroller.clear();
+                    if (sshClient != null) {
+                      Navigator.pop(
+                        context,
+                      );
+                      await sshClient!.execute('ffmpeg -f v4l2 -i /dev/video0 -f alsa -i default -c:v libx264 -crf 24 -preset medium -c:a aac /media/pi/LECTURE/${path}/${name}.mp4 &');
+
+                    }
+
+                  }, child: Text('Ok',style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.black,
                   ),))
@@ -81,59 +97,128 @@ class constants{
           ),
         ));
   }
-  static void create_folder({required BuildContext context,required var msg,required var name,required Future<void> fun}){
+  static void createAndDisplay_Folder({required BuildContext context,required var sshClient,required var msg,required var name,required var path,required var data,required TextEditingController searchcontroller,required TextEditingController creatcontroller,required bool show}){
     var formKey = GlobalKey<FormState>();
-    SSHClient? sshClient;
+Future<void> create_folder() async {
+   if (sshClient != null) {
+   creatcontroller.clear();
+   await sshClient!.execute('mkdir /media/pi/LECTURE/${name}');
+}
+}
     showDialog(context: context, builder: (context)=>
-        Form(
-          key: formKey,
-          child: AlertDialog(
-            actions: [
-              TextFormField(
-                onChanged: (data){
-                  name=data.trim();
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'name must not be empty'.tr;
-                  }
+        StatefulBuilder(builder:(context,setState)=>
+            Form(
+              key: formKey,
+              child:SingleChildScrollView(
+                child: AlertDialog(
+                  title:Text(msg),
+                  actions: [
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: TextFormField(
+                            onChanged: (data){
+                              path=data.trim();
+                            },
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return 'name must not be empty'.tr;
+                              }
 
-                  return null;
-                },
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  labelText: 'name'.tr,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      color: AppColors.primary,
-                      width: 1.0,
+                              return null;
+                            },
+                            controller: searchcontroller,
+                            keyboardType: TextInputType.name,
+                            decoration: InputDecoration(
+                              labelText: 'display folder'.tr,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(20),
+                                borderSide: BorderSide(
+                                  color: AppColors.primary,
+                                  width: 1.0,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+
+                        Expanded(
+                          child: IconButton(
+                            icon: Icon(Icons.slideshow),
+                            onPressed: ()async{
+                              searchcontroller.clear();
+                              setState((){
+                                show = !show;
+                              });
+                              data=(await sshClient!.execute('ls /media/pi/LECTURE/${path}&'))!;
+                              if(show==false){
+                                path='';
+                              }
+                            },
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
+                    SizedBox(height: 20,),
+                    Visibility(
+                        visible: show,
+                        child: Center(child: Text(data!))
+                    ),
+                    SizedBox(height: 20,),
+                    Row(children: [
+                      Expanded(
+                        flex: 5,
+                        child: TextFormField(
+                          onChanged: (data){
+                            name=data.trim();
+                          },
+                          validator: (value) {
+                            if (value!.isEmpty) {
+                              return 'name must not be empty'.tr;
+                            }
+
+                            return null;
+                          },
+                          controller: creatcontroller,
+                          keyboardType: TextInputType.name,
+                          decoration: InputDecoration(
+                            labelText: 'creat folder'.tr,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              borderSide: BorderSide(
+                                color: AppColors.primary,
+                                width: 1.0,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: IconButton(
+                          icon: Icon(Icons.create_new_folder),
+                          onPressed: create_folder,
+                        ),
+                      ),
+                    ],)
+                    ,
+                    SizedBox(height: 20,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(onPressed: (){ Navigator.pop(
+                          context,
+                        );}, child: Text('Cansel',style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),)),
+                      ],)
+                  ],
+                  backgroundColor: AppColors.homePage,
+                  icon: Icon(Icons.file_copy,size: 40),
                 ),
               ),
-              SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(onPressed: (){ Navigator.pop(
-                    context,
-                  );}, child: Text('Cansel',style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),)),
-                  TextButton(onPressed:(){
-                    fun;
-                  }, child: Text('create',style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),)),
-                ],)
-            ],
-            backgroundColor: AppColors.homePage,
-            title: Text('please put the correct name and path'),
-            icon: Icon(Icons.file_copy,size: 40),
-          ),
+            ),
         ));
   }
   static void ShowDialog({required BuildContext context,required var msg,}){

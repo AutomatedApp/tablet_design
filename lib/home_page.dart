@@ -574,22 +574,7 @@ class _HomePageState extends State<HomePage> {
                                 )
                               ],
                             ),
-                            Column(
-                              children: [
-                                Icon(
-                                  Icons.add,
-                                  size: 60,
-                                  color: Colors.grey,
-                                ),
-                                Text(
-                                  'Add Data',
-                                  style: TextStyle(
-                                    fontSize: 28,
-                                    color: Colors.grey,
-                                  ),
-                                )
-                              ],
-                            ),
+
                           ],
                         )
                       ],

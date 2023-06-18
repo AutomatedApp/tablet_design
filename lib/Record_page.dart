@@ -19,10 +19,14 @@ class record extends StatefulWidget {
 
 class _recordState extends State<record> {
   SSHClient? _sshClient;
+  var creatfolder = TextEditingController();
+  var searchfolder = TextEditingController();
+  var namecontroller = TextEditingController();
+  var pathcontroller = TextEditingController();
   var formKey = GlobalKey<FormState>();
-  var name,path,folder;
+  var name,path,data;
   bool resume = false;
-  bool show=true;
+  bool show=false;
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   final _isHours = true;
 
@@ -48,89 +52,8 @@ class _recordState extends State<record> {
   Future<void> _startScript() async {
     name='lecture1';
     path='robotics';
-    showDialog(context: context, builder: (context)=>
-        Form(
-          key: formKey,
-          child: AlertDialog(
-            actions: [
-              TextFormField(
-                onChanged: (data){
-                  name=data.trim();
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'name must not be empty'.tr;
-                  }
 
-                  return null;
-                },
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  labelText: 'name'.tr,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      color: AppColors.primary,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              TextFormField(
-                onChanged: (data){
-                  path=data.trim();
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'path must not be empty'.tr;
-                  }
-
-                  return null;
-                },
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  labelText: 'path'.tr,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      color: AppColors.primary,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(onPressed: (){ Navigator.pop(
-                    context,
-                  );}, child: Text('Cansel',style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),)),
-                  TextButton(onPressed: ()async{
-                    _stopWatchTimer.onExecute.add(StopWatchExecute.start);
-                    if (_sshClient != null) {
-                      Navigator.pop(
-                        context,
-                      );
-                      await _sshClient!.execute('ffmpeg -f v4l2 -i /dev/video0 -f alsa -i default -c:v libx264 -crf 24 -preset medium -c:a aac /media/pi/LECTURE/${path}/${name}.mp4 &');
-
-                  }
-
-                  }, child: Text('Ok',style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),))
-                ],)
-            ],
-            backgroundColor: AppColors.homePage,
-            title: Text('please put the correct name and path'),
-            icon: Icon(Icons.file_copy,size: 40),
-          ),
-        ));
+   constants.record_video(context: context, sshClient: _sshClient, stopWatch: _stopWatchTimer, name: name, path: path, namecontroller: namecontroller, pathcontroller: pathcontroller);
   }
   Future<void> _stopScript() async {
     Navigator.push(context,MaterialPageRoute(builder: (context)=>HomePage()));
@@ -138,11 +61,7 @@ class _recordState extends State<record> {
       await _sshClient!.execute('kill \$(pgrep ffmpeg)');
     }
   }
-  Future<void> create_folder() async {
-    if (_sshClient != null) {
-      await _sshClient!.execute('mkdir /media/pi/LECTURE/${name}');
-    }
-  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -204,119 +123,12 @@ class _recordState extends State<record> {
                   onPressed: ()async{
                     if (_sshClient != null) {
                       var response=await _sshClient!.execute('ls /media/pi/LECTURE &');
+                      data=response;
                       final lines = response!.split('\n');
                       final contents = lines.where((line) => line.isNotEmpty).toList();
-                      showDialog(context: context, builder: (context)=>
-                          StatefulBuilder(builder:(context,setState)=>
-                            Form(
-                              key: formKey,
-                              child:SingleChildScrollView(
-                                child: AlertDialog(
-                                  actions: [
-                                    Row(
-                                      children: [
-                                        Expanded(
-                                          flex: 5,
-                                          child: TextFormField(
-                                            onChanged: (data){
-                                              path=data.trim();
-                                            },
-                                            validator: (value) {
-                                              if (value!.isEmpty) {
-                                                return 'name must not be empty'.tr;
-                                              }
-
-                                              return null;
-                                            },
-                                            keyboardType: TextInputType.name,
-                                            decoration: InputDecoration(
-                                              labelText: 'display folder'.tr,
-                                              border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.circular(20),
-                                                borderSide: BorderSide(
-                                                  color: AppColors.primary,
-                                                  width: 1.0,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-
-                                        Expanded(
-                                          child: IconButton(
-                                            icon: Icon(Icons.slideshow),
-                                            onPressed: ()async{
-                                              setState((){
-                                                show = !show;
-                                              });
-                                              response=await _sshClient!.execute('ls /media/pi/LECTURE/${path}&');
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(height: 20,),
-                                    Visibility(
-                                      visible: show,
-                                        child: Center(child: Text(response!))
-                                    ),
-                                    SizedBox(height: 20,),
-                                    Row(children: [
-                                      Expanded(
-                                        flex: 5,
-                                        child: TextFormField(
-                                          onChanged: (data){
-                                            name=data.trim();
-                                          },
-                                          validator: (value) {
-                                            if (value!.isEmpty) {
-                                              return 'name must not be empty'.tr;
-                                            }
-
-                                            return null;
-                                          },
-                                          keyboardType: TextInputType.name,
-                                          decoration: InputDecoration(
-                                            labelText: 'creat folder'.tr,
-                                            border: OutlineInputBorder(
-                                              borderRadius: BorderRadius.circular(20),
-                                              borderSide: BorderSide(
-                                                color: AppColors.primary,
-                                                width: 1.0,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: IconButton(
-                                          icon: Icon(Icons.create_new_folder),
-                                          onPressed: create_folder,
-                                        ),
-                                      ),
-                                    ],)
-                                 ,
-                                    SizedBox(height: 20,),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        TextButton(onPressed: (){ Navigator.pop(
-                                          context,
-                                        );}, child: Text('Cansel',style: TextStyle(
-                                          fontSize: 20.0,
-                                          color: Colors.black,
-                                        ),)),
-                                      ],)
-                                  ],
-                                  backgroundColor: AppColors.homePage,
-                                  icon: Icon(Icons.file_copy,size: 40),
-                                ),
-                              ),
-                            ),
-                          ));
                     }
-
-                  },
+                   constants.createAndDisplay_Folder(context: context, msg: 'to go the home directory type (.)', name: name, path: path, data: data, searchcontroller: searchfolder, creatcontroller: creatfolder, show: show, sshClient: _sshClient);
+                    },
                   icon: Icon(Icons.folder_copy_sharp),
                   label: Text('display item and folder'),
                 ),
@@ -340,7 +152,6 @@ class _recordState extends State<record> {
                         icon: Icon(Icons.stop),
                         label: Text('Stop'),
                       ),
-
 
                     ],
                   ),
