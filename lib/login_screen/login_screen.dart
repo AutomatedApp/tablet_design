@@ -46,7 +46,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       'Log In'.tr,
                       style: TextStyle(
-                        fontSize: 20.0,
+                        fontSize: 40.0,
                         fontFamily: AppStrings.constantFont,
                         fontWeight: FontWeight.bold,
                         color: AppColors.primary,
@@ -142,7 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                  Container(
+                 /* Container(
                     child: DropdownButton(
                       isExpanded: true,
                       hint: Padding(
@@ -236,7 +236,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SizedBox(
                     height: 50,
-                  ),
+                  ),*/
                   MaterialButton(
                     minWidth: double.infinity,
                     height: 50,
@@ -265,7 +265,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(
                           fontFamily: AppStrings.constantFont,
                           color: Colors.white,
-                          fontSize: 20,
+                          fontSize: 30,
                           fontWeight: FontWeight.bold),
                     ),
                   ),

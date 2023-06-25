@@ -1,18 +1,37 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:tablet_design/Record_page.dart';
 import 'package:tablet_design/SSH.dart';
+import 'package:tablet_design/core/utils/app_colors.dart';
 import 'package:tablet_design/speechAPI.dart';
+import 'package:tablet_design/splash_screen/splash_screen.dart';
 import 'package:tablet_design/weather/model/weather.dart';
 import 'package:tablet_design/weather/services/weather_service.dart';
-import 'package:ssh2/ssh2.dart';
+import 'package:tablet_design/core/network/local_network.dart';
 import 'package:alan_voice/alan_voice.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
+
+import 'core/utils/app_strings.dart';
 
 class HomePage extends StatefulWidget {
   static final ROUTE='home';
   const HomePage({Key? key}) : super(key: key);
+
+
+  static Future<bool> logoutuser() async {
+
+    var email= cashNetwork.getCashData(key: "email");
+    var token= cashNetwork.getCashData(key: "token");
+    if(email!=null && token!=null){
+      cashNetwork.removeFromCash(key: "email");
+      cashNetwork.removeFromCash(key: "token");
+      return true;
+    }else{
+      return false;
+    }
+  }
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -400,6 +419,7 @@ class _HomePageState extends State<HomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
+
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Image.asset(
@@ -462,18 +482,22 @@ class _HomePageState extends State<HomePage> {
                           SizedBox(
                             width: 20,
                           ),
-                          Column(
-                            children: [
-                              Image.asset(
-                                "assets/plus.png",
-                                height: 50,
+                          TextButton.icon(
+
+                            icon: Icon(Icons.logout_outlined,color: Colors.white,),
+                            onPressed: (){
+                              HomePage.logoutuser();
+                              Navigator.pushNamedAndRemoveUntil(context,SplshScreen.ROUTE,(route)=>false);
+                            },
+                            label: Text(
+                              "LogOut".tr,
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: AppStrings.primaryFont,
+                                color: Colors.white,
                               ),
-                              Text(
-                                "Other",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 25),
-                              )
-                            ],
+                            ),
                           ),
                         ],
                       ),
@@ -1197,7 +1221,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                   ),
                                   Text(
-                                    'white board',
+                                    'Whiteboard',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 25),
                                   )
@@ -1251,7 +1275,7 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.white,
                                   ),
                                   Text(
-                                    'Camera',
+                                    'Record',
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 25),
                                   )
@@ -1276,7 +1300,7 @@ class _HomePageState extends State<HomePage> {
                                   color: Colors.grey,
                                 ),
                                 Text(
-                                  'Add',
+                                  'Other',
                                   style: TextStyle(
                                       color: Colors.grey, fontSize: 25),
                                 )

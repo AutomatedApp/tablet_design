@@ -81,7 +81,12 @@ class constants{
                       Navigator.pop(
                         context,
                       );
-                      await sshClient!.execute('ffmpeg -f v4l2 -i /dev/video0 -f alsa -i default -c:v libx264 -crf 24 -preset medium -c:a aac /media/pi/LECTURE/${path}/${name}.mp4 &');
+                      if (sshClient != null) {
+                        await sshClient!.execute('ffmpeg -f v4l2 -i /dev/video0 -f alsa -i default -c:v libx264 -crf 24 -preset medium -c:a aac /media/pi/LECTURE/${path}/${name}.mp4 &');
+                      }else{
+                        constants.SnacMessage(context, 'no connection ');
+                      }
+
 
                     }
 
@@ -103,14 +108,18 @@ Future<void> create_folder() async {
    if (sshClient != null) {
    creatcontroller.clear();
    await sshClient!.execute('mkdir /media/pi/LECTURE/${name}');
-}
+}else{
+     constants.SnacMessage(context, 'no connection ');
+   }
+
 }
     showDialog(context: context, builder: (context)=>
-        StatefulBuilder(builder:(context,setState)=>
-            Form(
-              key: formKey,
-              child:SingleChildScrollView(
-                child: AlertDialog(
+        SingleChildScrollView(
+          padding: EdgeInsets.only(top: 150),
+          child: StatefulBuilder(builder:(context,setState)=>
+              Form(
+                key: formKey,
+                child:AlertDialog(
                   title:Text(msg),
                   actions: [
                     Row(
@@ -118,8 +127,8 @@ Future<void> create_folder() async {
                         Expanded(
                           flex: 5,
                           child: TextFormField(
-                            onChanged: (data){
-                              path=data.trim();
+                            onChanged: (value){
+                              path=value.trim();
                             },
                             validator: (value) {
                               if (value!.isEmpty) {
@@ -151,7 +160,13 @@ Future<void> create_folder() async {
                               setState((){
                                 show = !show;
                               });
-                              data=(await sshClient!.execute('ls /media/pi/LECTURE/${path}&'))!;
+                              if (sshClient != null) {
+                                data=(await sshClient!.execute('ls /media/pi/LECTURE/${path}&'))!;
+                              }else{
+                                data='no connection to raspberry pi';
+                                constants.SnacMessage(context, 'no connection ');
+                                 }
+
                               if(show==false){
                                 path='';
                               }
@@ -163,15 +178,15 @@ Future<void> create_folder() async {
                     SizedBox(height: 20,),
                     Visibility(
                         visible: show,
-                        child: Center(child: Text(data!))
+                        child: Center(child: Text('${data}'))
                     ),
                     SizedBox(height: 20,),
                     Row(children: [
                       Expanded(
                         flex: 5,
                         child: TextFormField(
-                          onChanged: (data){
-                            name=data.trim();
+                          onChanged: (value){
+                            name=value.trim();
                           },
                           validator: (value) {
                             if (value!.isEmpty) {
@@ -218,7 +233,7 @@ Future<void> create_folder() async {
                   icon: Icon(Icons.file_copy,size: 40),
                 ),
               ),
-            ),
+          ),
         ));
   }
   static void ShowDialog({required BuildContext context,required var msg,}){
@@ -369,7 +384,9 @@ Future<void> create_folder() async {
             label: "Undo ", onPressed: (){ }),
         behavior:SnackBarBehavior.floating ,
         backgroundColor:AppColors.primary,
-        content: Container( height: 30,width: 30, margin:EdgeInsetsDirectional.only(bottom: 10),child: Center(child: Text('$message',style: TextStyle(fontSize: 20,fontFamily: 'Segoe Print'),))),
+        content: Container( height: 30,width: 30,
+
+            margin:EdgeInsetsDirectional.only(bottom: 10),child: Center(child: Text('$message',maxLines: 1,style: TextStyle(fontSize: 20,fontFamily: 'Segoe Print'),))),
       ),
     );
   }

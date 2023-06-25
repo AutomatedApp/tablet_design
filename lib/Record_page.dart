@@ -65,7 +65,7 @@ class _recordState extends State<record> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
+resizeToAvoidBottomInset: false,
 
       appBar: AppBar(
         title: Row(
@@ -118,42 +118,46 @@ class _recordState extends State<record> {
                 SizedBox(height: 40,),
                 Image.asset(ImageAssets.RecordinIcon,scale: 2.3,),
                 SizedBox(height: 40,),
-                ElevatedButton.icon(
-                  clipBehavior: Clip.antiAliasWithSaveLayer,
-                  onPressed: ()async{
-                    if (_sshClient != null) {
-                      var response=await _sshClient!.execute('ls /media/pi/LECTURE &');
-                      data=response;
-                      final lines = response!.split('\n');
-                      final contents = lines.where((line) => line.isNotEmpty).toList();
-                    }
-                   constants.createAndDisplay_Folder(context: context, msg: 'to go the home directory type (.)', name: name, path: path, data: data, searchcontroller: searchfolder, creatcontroller: creatfolder, show: show, sshClient: _sshClient);
-                    },
-                  icon: Icon(Icons.folder_copy_sharp),
-                  label: Text('display item and folder'),
-                ),
-                SizedBox(height: 40,),
                 Padding(
                   padding: const EdgeInsets.only(right: 15),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton.icon(
-
-                        onPressed:_startScript,
-                        icon: Icon(Icons.play_arrow,),
-                        label: Text('Start'),
+                      CircleAvatar(radius: 30,
+                        backgroundColor: AppColors.primary,
+                        child: IconButton(onPressed: _startScript,icon: Icon(Icons.play_arrow,color: Colors.white,)),
                       ),
                       SizedBox(width: 100,),
-
-                      ElevatedButton.icon(
-                        clipBehavior: Clip.antiAliasWithSaveLayer,
-                        onPressed: _stopScript,
-                        icon: Icon(Icons.stop),
-                        label: Text('Stop'),
+                      CircleAvatar(radius: 30,
+                        backgroundColor: AppColors.primary,
+                        child: IconButton(onPressed: _stopScript,icon: Icon(Icons.stop,color: Colors.white,)),
                       ),
-
                     ],
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 500.0),
+                  child: TextButton.icon(
+                    onPressed: ()async{
+                      if (_sshClient != null) {
+                        var response=await _sshClient!.execute('ls /media/pi/LECTURE &');
+                        data=response;
+                        final lines = response!.split('\n');
+                        final contents = lines.where((line) => line.isNotEmpty).toList();
+                      }
+                      constants.createAndDisplay_Folder(context: context, msg: 'to go the home directory type (.)', name: name, path: path, data: data, searchcontroller: searchfolder, creatcontroller: creatfolder, show: show, sshClient: _sshClient);
+                    },
+                    icon: CircleAvatar(radius: 30,
+                        backgroundColor: AppColors.primary,
+                        child: Icon(Icons.folder_copy_sharp,color: Colors.white,)),
+                    label: Text(
+                      "Brows folder".tr,
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.primary,
+                      ),
+                    ),
                   ),
                 ),
               ],
