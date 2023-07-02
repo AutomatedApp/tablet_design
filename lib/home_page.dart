@@ -2,9 +2,8 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:tablet_design/Record_page.dart';
-import 'package:tablet_design/SSH.dart';
-import 'package:tablet_design/core/utils/app_colors.dart';
+import 'package:tablet_design/Record%20Page/Record_page.dart';
+import 'package:tablet_design/Record%20Page/start.dart';
 import 'package:tablet_design/speechAPI.dart';
 import 'package:tablet_design/splash_screen/splash_screen.dart';
 import 'package:tablet_design/weather/model/weather.dart';
@@ -1230,7 +1229,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         GestureDetector(
                           onTap: () async {
-                            Navigator.pushNamed(context,record.ROUTE);
+                            Navigator.pushNamed(context, record_page.ROUTE);
                             setState(() {
                               camera = !camera;
                             });
@@ -1282,7 +1281,7 @@ class _HomePageState extends State<HomePage> {
                                 ],
                               )),
                         ),
-                        Container(
+                       /* Container(
                             decoration: BoxDecoration(
                               color: Color(0xFF133E49),
                               borderRadius: BorderRadius.circular(40),
@@ -1305,7 +1304,7 @@ class _HomePageState extends State<HomePage> {
                                       color: Colors.grey, fontSize: 25),
                                 )
                               ],
-                            )),
+                            )),*/
                       ],
                     ),
                   ),

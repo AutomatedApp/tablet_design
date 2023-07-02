@@ -8,10 +8,12 @@ import 'package:tablet_design/core/utils/app_colors.dart';
 import 'package:tablet_design/core/utils/app_images.dart';
 import 'package:tablet_design/core/utils/constant.dart';
 import 'package:tablet_design/home_page.dart';
+import 'package:lottie/lottie.dart';
 
 
 class record extends StatefulWidget {
   static final ROUTE='video';
+  static bool resume = true;
   const record( {Key? key}) : super(key: key);
   @override
   State<record> createState() => _recordState();
@@ -25,8 +27,8 @@ class _recordState extends State<record> {
   var pathcontroller = TextEditingController();
   var formKey = GlobalKey<FormState>();
   var name,path,data;
-  bool resume = false;
-  bool show=false;
+
+  bool show=true;
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   final _isHours = true;
 
@@ -34,12 +36,14 @@ class _recordState extends State<record> {
   void initState() {
     super.initState();
     _connectToRaspberryPi();
+
   }
   @override
   void dispose() {
     _sshClient?.disconnect();
     super.dispose();
     _stopWatchTimer.dispose();
+
   }
   Future<void> _connectToRaspberryPi() async {
     final sshHelper = SshHelper(
@@ -50,13 +54,19 @@ class _recordState extends State<record> {
     _sshClient = await sshHelper.connect();
   }
   Future<void> _startScript() async {
-    name='lecture1';
-    path='robotics';
+    name=constants.Name;
+    path=constants.location;
 
-   constants.record_video(context: context, sshClient: _sshClient, stopWatch: _stopWatchTimer, name: name, path: path, namecontroller: namecontroller, pathcontroller: pathcontroller);
+    _stopWatchTimer.onExecute.add(StopWatchExecute.start);
+      if (_sshClient != null) {
+        await _sshClient!.execute('ffmpeg -f v4l2 -i /dev/video0 -f alsa -i default -c:v libx264 -crf 24 -preset medium -c:a aac /media/pi/LECTURE/${path}/${name}.mp4 &');
+      }else{
+        constants.SnacMessage(context, 'no connection ');
+      }
   }
   Future<void> _stopScript() async {
-    Navigator.push(context,MaterialPageRoute(builder: (context)=>HomePage()));
+    _stopWatchTimer.onExecute.add(StopWatchExecute.stop);
+    Navigator.pushReplacementNamed(context, HomePage.ROUTE);
     if (_sshClient != null) {
       await _sshClient!.execute('kill \$(pgrep ffmpeg)');
     }
@@ -92,7 +102,7 @@ resizeToAvoidBottomInset: false,
       ),
       body: SingleChildScrollView(
         child: Container(
-
+padding: EdgeInsets.only(top: 70),
 
           child: Center(
             child: Column(
@@ -115,9 +125,11 @@ resizeToAvoidBottomInset: false,
                         ),);
                     }
                 ),
-                SizedBox(height: 40,),
-                Image.asset(ImageAssets.RecordinIcon,scale: 2.3,),
-                SizedBox(height: 40,),
+                SizedBox(
+                  child:record.resume? Image.asset(
+                    ImageAssets.RecordinIcon,
+                    scale: 2.3,
+                  ):  Lottie.asset(ImageAssets.recording,width: 300,height: 170,) ,),
                 Padding(
                   padding: const EdgeInsets.only(right: 15),
                   child: Row(
@@ -125,7 +137,12 @@ resizeToAvoidBottomInset: false,
                     children: [
                       CircleAvatar(radius: 30,
                         backgroundColor: AppColors.primary,
-                        child: IconButton(onPressed: _startScript,icon: Icon(Icons.play_arrow,color: Colors.white,)),
+                        child: IconButton(onPressed:(){
+                          setState(() {
+                            record.resume=!record.resume;
+                          });
+                          _startScript();
+                        } ,icon: Icon(Icons.play_arrow,color: Colors.white,)),
                       ),
                       SizedBox(width: 100,),
                       CircleAvatar(radius: 30,
@@ -133,31 +150,6 @@ resizeToAvoidBottomInset: false,
                         child: IconButton(onPressed: _stopScript,icon: Icon(Icons.stop,color: Colors.white,)),
                       ),
                     ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 500.0),
-                  child: TextButton.icon(
-                    onPressed: ()async{
-                      if (_sshClient != null) {
-                        var response=await _sshClient!.execute('ls /media/pi/LECTURE &');
-                        data=response;
-                        final lines = response!.split('\n');
-                        final contents = lines.where((line) => line.isNotEmpty).toList();
-                      }
-                      constants.createAndDisplay_Folder(context: context, msg: 'to go the home directory type (.)', name: name, path: path, data: data, searchcontroller: searchfolder, creatcontroller: creatfolder, show: show, sshClient: _sshClient);
-                    },
-                    icon: CircleAvatar(radius: 30,
-                        backgroundColor: AppColors.primary,
-                        child: Icon(Icons.folder_copy_sharp,color: Colors.white,)),
-                    label: Text(
-                      "Brows folder".tr,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.primary,
-                      ),
-                    ),
                   ),
                 ),
               ],

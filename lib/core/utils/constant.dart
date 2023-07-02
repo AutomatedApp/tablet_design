@@ -2,103 +2,146 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:ssh2/ssh2.dart';
+import 'package:tablet_design/Record%20Page/Record_page.dart';
 import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:tablet_design/core/utils/app_colors.dart';
+
 class constants{
-  static void record_video({required BuildContext context,required var sshClient,required StopWatchTimer stopWatch,required var name,required var path,required TextEditingController namecontroller,required TextEditingController pathcontroller}){
+  static var Name;
+  static var location;
+  static void record_video({required BuildContext context,required var sshClient,required var name,required var path,required var data,}){
+    var createfolder = TextEditingController();
+    var searchfolder = TextEditingController();
+    var namecontroller = TextEditingController();
+    var pathcontroller = TextEditingController();
     var formKey = GlobalKey<FormState>();
-     stopWatch= StopWatchTimer();
-    showDialog(context: context, builder: (context)=>
-        Form(
-          key: formKey,
-          child: AlertDialog(
-            actions: [
-              TextFormField(
-                onChanged: (data){
-                  name=data.trim();
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'name must not be empty'.tr;
-                  }
+    var name,path,data;
+    bool show=false;
+    showDialog(
+        context: context, builder: (context)=>
+        StatefulBuilder(
+          builder:(context,setState)=> Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(top: 150),
+              child: AlertDialog(
 
-                  return null;
-                },
-                keyboardType: TextInputType.name,
-                controller: namecontroller,
-                decoration: InputDecoration(
-                  labelText: 'name'.tr,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      color: AppColors.primary,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
+                actions: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: Column(children: [
+                      TextFormField(
+                        onChanged: (data){
+                          name=data.trim();
+                          Name=data.trim();
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'name must not be empty'.tr;
+                          }
+
+                          return null;
+                        },
+                        keyboardType: TextInputType.name,
+                        controller: namecontroller,
+                        decoration: InputDecoration(
+
+                          labelText: 'Record name'.tr,
+                          labelStyle: TextStyle(color: Colors.black.withOpacity(.5)),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: AppColors.primary,
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      TextFormField(
+                        controller: pathcontroller,
+                        onChanged: (data){
+                          path=data.trim();
+                          location=data.trim();
+                        },
+                        validator: (value) {
+                          if (value!.isEmpty) {
+                            return 'path must not be empty'.tr;
+                          }
+
+                          return null;
+                        },
+                        keyboardType: TextInputType.name,
+                        decoration: InputDecoration(
+                          labelStyle: TextStyle(color: Colors.black.withOpacity(.5)),
+                          labelText: 'Write/Choose the path location '.tr,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(
+                              color: AppColors.primary,
+                              width: 1.0,
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+
+                          ElevatedButton.icon(
+                            style: ButtonStyle(
+                                backgroundColor:  MaterialStateProperty.all(AppColors.primary)),
+                            onPressed: ()async{
+                              if (sshClient != null) {
+                                var response=await sshClient!.execute('ls /media/pi/LECTURE &');
+                                data=response;
+                                final lines = response!.split('\n');
+                                final contents = lines.where((line) => line.isNotEmpty).toList();
+                              }
+                              constants.createAndDisplay_Folder(context: context, msg: '\t \t \t \t To go the home directory type (.)\t \t \t \t \t \t ', name: name, path: path, data: data, searchcontroller: searchfolder, creatcontroller: createfolder, show: show, sshClient: sshClient);
+                            }, icon: Icon(Icons.folder_copy_sharp,color: Colors.white,), label: Text(
+                            "Browse/Create folder".tr,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color:Colors.white,
+                            ),
+                          ),),
+                        ],
+                      ),
+                      SizedBox(height: 20,),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton(onPressed: (){ Navigator.pop(
+                            context,
+                          );}, child: Text('Cancel',style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),)),
+                          TextButton(onPressed: ()async{
+                            if (formKey.currentState!.validate()){
+                            namecontroller.clear();
+                            pathcontroller.clear();
+                            Navigator.pushReplacementNamed(context, record.ROUTE);
+                            record.resume=true;
+                            }
+                          }, child: Text('Ok',style: TextStyle(
+                            fontSize: 20.0,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.primary,
+                          ),))
+                        ],)
+                    ],),
+                  )
+                ],
+                backgroundColor: Colors.white.withOpacity(.8),
+                title: Text('\t\t\t   Where Will You Put This Record      \t\t\t\t',style: TextStyle(color: AppColors.primary,fontSize: 25,fontWeight: FontWeight.bold),),
+                icon: Icon(Icons.file_copy,size: 40),
               ),
-              SizedBox(height: 20,),
-              TextFormField(
-                controller: pathcontroller,
-                onChanged: (data){
-                  path=data.trim();
-                },
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'path must not be empty'.tr;
-                  }
-
-                  return null;
-                },
-                keyboardType: TextInputType.name,
-                decoration: InputDecoration(
-                  labelText: 'path'.tr,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    borderSide: BorderSide(
-                      color: AppColors.primary,
-                      width: 1.0,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: 20,),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  TextButton(onPressed: (){ Navigator.pop(
-                    context,
-                  );}, child: Text('Cansel',style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),)),
-                  TextButton(onPressed: ()async{
-                    stopWatch.onExecute.add(StopWatchExecute.start);
-                    namecontroller.clear();
-                    pathcontroller.clear();
-                    if (sshClient != null) {
-                      Navigator.pop(
-                        context,
-                      );
-                      if (sshClient != null) {
-                        await sshClient!.execute('ffmpeg -f v4l2 -i /dev/video0 -f alsa -i default -c:v libx264 -crf 24 -preset medium -c:a aac /media/pi/LECTURE/${path}/${name}.mp4 &');
-                      }else{
-                        constants.SnacMessage(context, 'no connection ');
-                      }
-
-
-                    }
-
-                  }, child: Text('Ok',style: TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.black,
-                  ),))
-                ],)
-            ],
-            backgroundColor: AppColors.homePage,
-            title: Text('please put the correct name and path'),
-            icon: Icon(Icons.file_copy,size: 40),
+            ),
           ),
         ));
   }
@@ -109,7 +152,7 @@ Future<void> create_folder() async {
    creatcontroller.clear();
    await sshClient!.execute('mkdir /media/pi/LECTURE/${name}');
 }else{
-     constants.SnacMessage(context, 'no connection ');
+     constants.SnacMessage(context, 'No connection ');
    }
 
 }
@@ -120,60 +163,54 @@ Future<void> create_folder() async {
               Form(
                 key: formKey,
                 child:AlertDialog(
-                  title:Text(msg),
+                  titlePadding: EdgeInsets.symmetric(horizontal: 20),
+                  contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                  title:Text(msg,),
                   actions: [
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 5,
-                          child: TextFormField(
-                            onChanged: (value){
-                              path=value.trim();
-                            },
-                            validator: (value) {
-                              if (value!.isEmpty) {
-                                return 'name must not be empty'.tr;
-                              }
+                    TextFormField(
+                      onChanged: (value){
+                        path=value.trim();
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'name must not be empty'.tr;
+                        }
 
-                              return null;
-                            },
-                            controller: searchcontroller,
-                            keyboardType: TextInputType.name,
-                            decoration: InputDecoration(
-                              labelText: 'display folder'.tr,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(20),
-                                borderSide: BorderSide(
-                                  color: AppColors.primary,
-                                  width: 1.0,
-                                ),
-                              ),
-                            ),
+                        return null;
+                      },
+
+                      controller: searchcontroller,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
+                          icon: Icon(Icons.slideshow),
+                          onPressed: ()async{
+                            searchcontroller.clear();
+                            setState((){
+                              show = !show;
+                            });
+                            if (sshClient != null) {
+                              data=(await sshClient!.execute('ls /media/pi/LECTURE/${path}&'))!;
+                            }else{
+                              data='No connection to raspberry pi';
+                              constants.SnacMessage(context, 'No connection ');
+                            }
+
+                            if(show==false){
+                              path='';
+                            }
+                          },
+                        ),
+                        labelText: 'Display folder'.tr,
+                        border: OutlineInputBorder(
+
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(
+                            color: AppColors.primary,
+                            width: 1.0,
                           ),
                         ),
-
-                        Expanded(
-                          child: IconButton(
-                            icon: Icon(Icons.slideshow),
-                            onPressed: ()async{
-                              searchcontroller.clear();
-                              setState((){
-                                show = !show;
-                              });
-                              if (sshClient != null) {
-                                data=(await sshClient!.execute('ls /media/pi/LECTURE/${path}&'))!;
-                              }else{
-                                data='no connection to raspberry pi';
-                                constants.SnacMessage(context, 'no connection ');
-                                 }
-
-                              if(show==false){
-                                path='';
-                              }
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     SizedBox(height: 20,),
                     Visibility(
@@ -181,41 +218,34 @@ Future<void> create_folder() async {
                         child: Center(child: Text('${data}'))
                     ),
                     SizedBox(height: 20,),
-                    Row(children: [
-                      Expanded(
-                        flex: 5,
-                        child: TextFormField(
-                          onChanged: (value){
-                            name=value.trim();
-                          },
-                          validator: (value) {
-                            if (value!.isEmpty) {
-                              return 'name must not be empty'.tr;
-                            }
+                    TextFormField(
+                      onChanged: (value){
+                        name=value.trim();
+                      },
+                      validator: (value) {
+                        if (value!.isEmpty) {
+                          return 'Name must not be empty'.tr;
+                        }
 
-                            return null;
-                          },
-                          controller: creatcontroller,
-                          keyboardType: TextInputType.name,
-                          decoration: InputDecoration(
-                            labelText: 'creat folder'.tr,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-                              borderSide: BorderSide(
-                                color: AppColors.primary,
-                                width: 1.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: IconButton(
+                        return null;
+                      },
+                      controller: creatcontroller,
+                      keyboardType: TextInputType.name,
+                      decoration: InputDecoration(
+                        suffixIcon: IconButton(
                           icon: Icon(Icons.create_new_folder),
                           onPressed: create_folder,
                         ),
+                        labelText: 'Create folder'.tr,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(20),
+                          borderSide: BorderSide(
+                            color: AppColors.primary,
+                            width: 1.0,
+                          ),
+                        ),
                       ),
-                    ],)
+                    )
                     ,
                     SizedBox(height: 20,),
                     Row(
@@ -223,14 +253,15 @@ Future<void> create_folder() async {
                       children: [
                         TextButton(onPressed: (){ Navigator.pop(
                           context,
-                        );}, child: Text('Cansel',style: TextStyle(
+                        );}, child: Text('Done',style: TextStyle(
                           fontSize: 20.0,
-                          color: Colors.black,
+                          color: AppColors.primary,
                         ),)),
                       ],)
                   ],
-                  backgroundColor: AppColors.homePage,
-                  icon: Icon(Icons.file_copy,size: 40),
+                  backgroundColor:Colors.white.withOpacity(.8),
+
+                  icon:Center(child: Text('Create new folder'.tr,style: TextStyle(color: AppColors.primary,fontSize: 30),)),
                 ),
               ),
           ),

@@ -17,4 +17,6 @@ class ImageAssets{
  static String background='$impath/Background1.jpg';
  static String background_Setting='$impath/Background.png';
  static String resetPass='$impath/resetPass.jpg';
+ static String recording='R/recording.json';
+
 }

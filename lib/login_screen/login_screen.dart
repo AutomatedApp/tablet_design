@@ -44,7 +44,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
-                      'Log In'.tr,
+                      'Log in'.tr,
                       style: TextStyle(
                         fontSize: 40.0,
                         fontFamily: AppStrings.constantFont,
@@ -142,101 +142,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(
                     height: 20,
                   ),
-                 /* Container(
-                    child: DropdownButton(
-                      isExpanded: true,
-                      hint: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text(
-                          'Select ِAcademic Year',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontFamily: 'Microsoft PhagsPa',
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF006782),
-                          ),
-                        ),
-                      ),
-                      items: [
-                        "First Year",
-                        " Second Year",
-                        "Third Year",
-                        "Fourth Year"
-                      ]
-                          .map((AcademicYear) => DropdownMenuItem(
-                        child: Padding(
-                          padding:
-                          const EdgeInsets.only(left: 20),
-                          child: Text(
-                            "$AcademicYear",
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontFamily: 'Microsoft PhagsPa',
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF006782),
-                            ),
-                          ),
-                        ),
-                        value: AcademicYear,
-                      ))
-                          .toList(),
-                      onChanged: (val) {
-                        setState(() {
-                          selectLecture = val;
-                        });
-                      },
-                      value: selectLecture,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Container(
-                    child: DropdownButton(
-                      isExpanded: true,
-                      hint: Padding(
-                        padding: const EdgeInsets.only(left: 20),
-                        child: Text(
-                          'Select ِTopic',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontFamily: 'Microsoft PhagsPa',
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF006782),
-                          ),
-                        ),
-                      ),
-                      items: [
-                        "Lecture",
-                        " Event",
-                        "Othter",
-                      ]
-                          .map((Topic) => DropdownMenuItem(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 20),
-                            child: Text(
-                              "$Topic",
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontFamily: 'Microsoft PhagsPa',
-                                fontWeight: FontWeight.bold,
-                                color: Color(0xFF006782),
-                              ),
-                            ),
-                          ),
-                          value: Topic))
-                          .toList(),
-                      onChanged: (val) {
-                        setState(() {
-                          selectTopic = val;
-                        });
-                      },
-                      value: selectTopic,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 50,
-                  ),*/
                   MaterialButton(
                     minWidth: double.infinity,
                     height: 50,
@@ -251,17 +156,16 @@ class _LoginScreenState extends State<LoginScreen> {
                         } on FirebaseAuthException catch (e) {
                           if (e.code == 'user-not-found') {
                             constants.SnacMessage(context, "user not found".tr);
-                            print('No user found for that email.');
                           } else if (e.code == 'wrong-password') {
-                            constants.SnacMessage(context, "wron password".tr);
-                            print('Wrong password provided for that user.');
+                            constants.SnacMessage(context, "wrong password".tr);
+
                           }
                         }
 
                       }
                     },
                     child: Text(
-                      'Log In'.tr,
+                      'Log in'.tr,
                       style: TextStyle(
                           fontFamily: AppStrings.constantFont,
                           color: Colors.white,
