@@ -126,10 +126,11 @@ padding: EdgeInsets.only(top: 70),
                     }
                 ),
                 SizedBox(
-                  child:record.resume? Image.asset(
+                  child: Image.asset(
                     ImageAssets.RecordinIcon,
                     scale: 2.3,
-                  ):  Lottie.asset(ImageAssets.recording,width: 300,height: 170,) ,),
+                  ),),
+                SizedBox(height: 22,),
                 Padding(
                   padding: const EdgeInsets.only(right: 15),
                   child: Row(

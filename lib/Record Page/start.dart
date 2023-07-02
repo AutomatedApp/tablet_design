@@ -72,7 +72,7 @@ class record_page extends StatelessWidget
 
             children:
             [
-              Image(image:AssetImage( ImageAssets.RecordPage),width: 570,height: 570,),
+              Image(image:AssetImage( ImageAssets.RecordPage),width: 570,height: 500,),
 
              Column(children: [
                InkWell(child:Image.asset(
