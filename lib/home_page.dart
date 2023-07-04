@@ -38,12 +38,12 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   _HomePageState(){
-    AlanVoice.addButton("575866fc9a1a207a5cf6554716aa06af2e956eca572e1d8b807a3e2338fdd0dc/stage",buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT,);
+    AlanVoice.addButton("1625ac6f283b3da012f90ce4ae02065d2e956eca572e1d8b807a3e2338fdd0dc/stage",buttonAlign: AlanVoice.BUTTON_ALIGN_LEFT,);
     AlanVoice.onCommand.add((command)=>handel_command(command.data));
 
   }
 
-  String path = '192.168.1.30';
+  String path = '192.168.107.71';
 
   bool led1 = false;
   bool led2 = false;
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
   void dispose() {
     super.dispose();
   }
-  void handel_command(Map<String,dynamic>command){
+  void handel_command(Map<String,dynamic>command)async{
     switch(command['command']){
       case'forward':
         Navigator.pushNamed(context,record.ROUTE);
@@ -89,109 +89,131 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           led1 = true;
         });
-        Uri.http(path, '/on1');
+       var url=Uri.http(path, '/on1');
+        await http.get(url);
         break;
       case'off1':
           setState(() {
             led1 = false;
           });
-          Uri.http(path, '/off1');
+          var url=Uri.http(path, '/off1');
+          await http.get(url);
           break;
       case 'led2':
         setState(() {
           led2 = true;
         });
-        Uri.http(path, '/on2');
+        var url= Uri.http(path, '/on2');
+        await http.get(url);
         break;
       case'off2':
         setState(() {
           led2 = false;
         });
-        Uri.http(path, '/off2');
+        var url=Uri.http(path, '/off2');
+        await http.get(url);
         break;
       case 'led3':
         setState(() {
           led3 = true;
         });
-        Uri.http(path, '/on3');
+
+        var url=Uri.http(path, '/on3');
+        await http.get(url);
         break;
       case'off3':
         setState(() {
           led3 = false;
         });
-        Uri.http(path, '/off3');
+        var url=Uri.http(path, '/off3');
+        await http.get(url);
         break;
       case 'led4':
         setState(() {
           led4 = true;
         });
-        Uri.http(path, '/on4');
+        var url=Uri.http(path, '/on4');
+        await http.get(url);
         break;
       case'off4':
         setState(() {
           led4 = false;
         });
-        Uri.http(path, '/off4');
+        var url=Uri.http(path, '/off4');
+        await http.get(url);
         break;
       case 'led5':
         setState(() {
           led5 = true;
         });
-        Uri.http(path, '/on5');
+
+        var url=Uri.http(path, '/on5');
+        await http.get(url);
         break;
       case'off5':
         setState(() {
           led5 = false;
         });
-        Uri.http(path, '/off5');
+        var url= Uri.http(path, '/off5');
+        await http.get(url);
         break;
       case 'led6':
         setState(() {
           led6 = true;
         });
-        Uri.http(path, '/on6');
+        var url= Uri.http(path, '/on6');
+        await http.get(url);
         break;
       case'off6':
         setState(() {
           led6 = false;
         });
-        Uri.http(path, '/off6');
+        var url=Uri.http(path, '/off6');
+        await http.get(url);
         break;
       case 'fan1':
         setState(() {
           fan1 = true;
         });
-        Uri.http(path, '/f_on1');
+
+        var url=Uri.http(path, '/f_on1');
+        await http.get(url);
         break;
       case'off7':
         setState(() {
           fan1 = false;
         });
-        Uri.http(path, '/f_off1');
+        var url= Uri.http(path, '/f_off1');
+        await http.get(url);
         break;
       case 'fan2':
         setState(() {
           fan2 = true;
         });
-        Uri.http(path, '/f_on2');
+        var url=Uri.http(path, '/f_on2');
+        await http.get(url);
         break;
       case'off8':
         setState(() {
           fan2 = false;
         });
-        Uri.http(path, '/f_off2');
+        var url=Uri.http(path, '/f_off2');
+        await http.get(url);
         break;
       case 'fan1':
         setState(() {
           fan3 = true;
         });
-        Uri.http(path, '/f_on3');
+
+        var url=Uri.http(path, '/f_on3');
+        await http.get(url);
         break;
       case'off9':
         setState(() {
           fan3 = false;
         });
-        Uri.http(path, '/f_off3');
+        var url= Uri.http(path, '/f_off3');
+        await http.get(url);
         break;
       case'on all':
           setState(() {
@@ -202,12 +224,18 @@ class _HomePageState extends State<HomePage> {
             led5 = true;
             led6 = true;
           });
-          Uri.http(path, '/on1');
-          Uri.http(path, '/on2');
-          Uri.http(path, '/on3');
-          Uri.http(path, '/on4');
-          Uri.http(path, '/on5');
-          Uri.http(path, '/on6');
+          var url=Uri.http(path, '/on1');
+          await http.get(url);
+          var url2=Uri.http(path, '/on2');
+          await http.get(url2);
+          var url3=Uri.http(path, '/on3');
+          await http.get(url3);
+          var url4=Uri.http(path, '/on4');
+          await http.get(url4);
+          var url5=Uri.http(path, '/on5');
+          await http.get(url5);
+          var url6=Uri.http(path, '/on6');
+          await http.get(url6);
         break;
       case'off all':
           setState(() {
@@ -218,12 +246,18 @@ class _HomePageState extends State<HomePage> {
             led5 = false;
             led6 = false;
           });
-          Uri.http(path, '/off1');
-          Uri.http(path, '/off2');
-          Uri.http(path, '/off3');
-          Uri.http(path, '/off4');
-          Uri.http(path, '/off5');
-          Uri.http(path, '/off6');
+          var url=Uri.http(path, '/off1');
+          await http.get(url);
+          var url1=Uri.http(path, '/off2');
+          await http.get(url1);
+          var url2=Uri.http(path, '/off3');
+          await http.get(url2);
+          var url3=Uri.http(path, '/off4');
+          await http.get(url3);
+          var url4=Uri.http(path, '/off5');
+          await http.get(url4);
+          var url5=Uri.http(path, '/off6');
+          await http.get(url5);
         break;
     }
 
@@ -240,116 +274,135 @@ class _HomePageState extends State<HomePage> {
       }
     },
   );
-  void _handleVoiceCommand(String command){
+  Future<void> _handleVoiceCommand(String command) async {
     // Implement your logic to handle the recognized voice command
     var text = command.toLowerCase();
     if(text.contains('light one on')||text.contains('light 1 on')||text.contains('open light one')){
       setState(() {
         led1 = true;
       });
-      Uri.http(path, '/on1');
+      var url=Uri.http(path, '/on1');
+      await http.get(url);
     }
     if(text.contains('light one of')||text.contains('light 1 of')||text.contains('close light one')){
       setState(() {
         led1 = false;
       });
-      Uri.http(path, '/off1');
+      var url=Uri.http(path, '/off1');
+      await http.get(url);
     }
     if(text.contains('light two on')||text.contains('light 2 on')||text.contains('open light two')){
       setState(() {
         led2 = true;
       });
-      Uri.http(path, '/on2');
+      var url2=Uri.http(path, '/on2');
+      await http.get(url2);
     }
     if(text.contains('light two of')||text.contains('light 2 of')||text.contains('close light two')){
       setState(() {
         led2 = false;
       });
-      Uri.http(path, '/off2');
+      var url1=Uri.http(path, '/off2');
+      await http.get(url1);
     }
     if(text.contains('light three on')||text.contains('light 3 on')||text.contains('open light three')){
       setState(() {
         led3 = true;
       });
-      Uri.http(path, '/on3');
+      var url3=Uri.http(path, '/on3');
+      await http.get(url3);
     }
     if(text.contains('light three of')||text.contains('light 3 of')||text.contains('close light three')){
       setState(() {
         led3 = false;
       });
-      Uri.http(path, '/off3');
+      var url2=Uri.http(path, '/off3');
+      await http.get(url2);
     }
     if(text.contains('light for on')||text.contains('light four on')||text.contains('light 4 on')||text.contains('open light four')){
       setState(() {
         led4 = true;
       });
-      Uri.http(path, '/on4');
+      var url4=Uri.http(path, '/on4');
+      await http.get(url4);
     }
     if(text.contains('light for of')||text.contains('light four of')||text.contains('light 4 of')||text.contains('close light four')){
       setState(() {
         led4 = false;
       });
-      Uri.http(path, '/off4');
+      var url3=Uri.http(path, '/off4');
+      await http.get(url3);
     }
     if(text.contains('light five on')||text.contains('light 5 on')||text.contains('open light five')){
       setState(() {
         led5 = true;
       });
-      Uri.http(path, '/on5');
+      var url5=Uri.http(path, '/on5');
+      await http.get(url5);
     }
     if(text.contains('light five of')||text.contains('light 5 of')||text.contains('close light five')){
       setState(() {
         led5 = false;
       });
-      Uri.http(path, '/off5');
+      var url4=Uri.http(path, '/off5');
+      await http.get(url4);
     }
     if(text.contains('light six on')||text.contains('light 6 on')||text.contains('open light sex')){
       setState(() {
         led6 = true;
       });
-      Uri.http(path, '/on6');
+      var url6=Uri.http(path, '/on6');
+      await http.get(url6);
     }
     if(text.contains('light six of')||text.contains('light 6 of')||text.contains('close light sex')){
       setState(() {
         led6 = false;
       });
-      Uri.http(path, '/off6');
+      var url5=Uri.http(path, '/off6');
+      await http.get(url5);
     }
     if(text.contains('fan one on')||text.contains('fan 1 on')||text.contains('open fan one')){
       setState(() {
         fan1 = true;
       });
-      Uri.http(path, '/f_on1');
+      var u=Uri.http(path, '/f_on1');
+      await http.get(u);
     }
     if(text.contains('fan one of')||text.contains('fan 1 of')||text.contains('close fan one')){
       setState(() {
         fan1 = false;
       });
-      Uri.http(path, '/f_off1');
+      var u=Uri.http(path, '/f_off1');
+      await http.get(u);
     }
     if(text.contains('fan too on')||text.contains('fan 2 on')||text.contains('fan two on')||text.contains('open fan two')){
       setState(() {
         fan2 = true;
       });
-      Uri.http(path, '/f_on2');
+      var u=Uri.http(path, '/f_on2');
+      await http.get(u);
+
     }
     if(text.contains('fan too of')||text.contains('fan 2 of')||text.contains('fan two of')||text.contains('close fan two')){
       setState(() {
         fan2 = false;
       });
-      Uri.http(path, '/f_off2');
+      var u=Uri.http(path, '/f_off2');
+      await http.get(u);
     }
     if(text.contains('fan three on')||text.contains('fan 3 on')||text.contains('open fan three')){
       setState(() {
         fan3 = true;
       });
-      Uri.http(path, '/f_on3');
+      var u=Uri.http(path, '/f_on3');
+      await http.get(u);
     }
     if(text.contains('fan three of')||text.contains('fan 3 of')||text.contains('close fan three')){
       setState(() {
         fan3 = false;
       });
-      Uri.http(path, '/f_off3');
+      var u=Uri.http(path, '/f_off3');
+      await http.get(u);
     }
     if(text.contains('open all light')||text.contains('turn on all light')){
       setState(() {
@@ -360,12 +413,18 @@ class _HomePageState extends State<HomePage> {
         led5 = true;
         led6 = true;
       });
-      Uri.http(path, '/on1');
-      Uri.http(path, '/on2');
-      Uri.http(path, '/on3');
-      Uri.http(path, '/on4');
-      Uri.http(path, '/on5');
-      Uri.http(path, '/on6');
+      var url=Uri.http(path, '/on1');
+      await http.get(url);
+      var url2=Uri.http(path, '/on2');
+      await http.get(url2);
+      var url3=Uri.http(path, '/on3');
+      await http.get(url3);
+      var url4=Uri.http(path, '/on4');
+      await http.get(url4);
+      var url5=Uri.http(path, '/on5');
+      await http.get(url5);
+      var url6=Uri.http(path, '/on6');
+      await http.get(url6);
     }
     if(text.contains('close all light')||text.contains('turn off all light')){
       setState(() {
@@ -376,12 +435,18 @@ class _HomePageState extends State<HomePage> {
         led5 = false;
         led6 = false;
       });
-      Uri.http(path, '/off1');
-      Uri.http(path, '/off2');
-      Uri.http(path, '/off3');
-      Uri.http(path, '/off4');
-      Uri.http(path, '/off5');
-      Uri.http(path, '/off6');
+      var url=Uri.http(path, '/off1');
+      await http.get(url);
+      var url1=Uri.http(path, '/off2');
+      await http.get(url1);
+      var url2=Uri.http(path, '/off3');
+      await http.get(url2);
+      var url3=Uri.http(path, '/off4');
+      await http.get(url3);
+      var url4=Uri.http(path, '/off5');
+      await http.get(url4);
+      var url5=Uri.http(path, '/off6');
+      await http.get(url5);
     }
     print('Voice Command: $command');
   }
@@ -740,7 +805,7 @@ class _HomePageState extends State<HomePage> {
                             });
                             if (led2 == true) {
                               var url = Uri.http(path, '/on2');
-                              var res = await http.get(url);
+                              await http.get(url);
                             } else {
                               var url = Uri.http(path, '/off2');
                               var res = await http.get(url);

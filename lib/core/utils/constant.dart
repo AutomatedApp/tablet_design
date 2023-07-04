@@ -9,7 +9,7 @@ import 'package:tablet_design/core/utils/app_colors.dart';
 class constants{
   static var Name;
   static var location;
-  static void record_video({required BuildContext context,required var sshClient,required var name,required var path,required var data,}){
+  static void record_video({required BuildContext context,required var sshClient,required var name,required var path,}){
     var createfolder = TextEditingController();
     var searchfolder = TextEditingController();
     var namecontroller = TextEditingController();
@@ -93,12 +93,11 @@ class constants{
                             style: ButtonStyle(
                                 backgroundColor:  MaterialStateProperty.all(AppColors.primary)),
                             onPressed: ()async{
-                              if (sshClient != null) {
                                 var response=await sshClient!.execute('ls /media/pi/LECTURE &');
                                 data=response;
-                                final lines = response!.split('\n');
-                                final contents = lines.where((line) => line.isNotEmpty).toList();
-                              }
+                               // final lines = response!.split('\n');
+                                //final contents = lines.where((line) => line.isNotEmpty).toList();
+
                               constants.createAndDisplay_Folder(context: context, msg: '\t \t \t \t To go the home directory type (.)\t \t \t \t \t \t ', name: name, path: path, data: data, searchcontroller: searchfolder, creatcontroller: createfolder, show: show, sshClient: sshClient);
                             }, icon: Icon(Icons.folder_copy_sharp,color: Colors.white,), label: Text(
                             "Browse/Create folder".tr,

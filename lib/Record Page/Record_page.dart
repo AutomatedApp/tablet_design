@@ -8,7 +8,7 @@ import 'package:tablet_design/core/utils/app_colors.dart';
 import 'package:tablet_design/core/utils/app_images.dart';
 import 'package:tablet_design/core/utils/constant.dart';
 import 'package:tablet_design/home_page.dart';
-import 'package:lottie/lottie.dart';
+import 'package:tablet_design/Record%20Page/start.dart';
 
 
 class record extends StatefulWidget {
@@ -31,7 +31,6 @@ class _recordState extends State<record> {
   bool show=true;
   final StopWatchTimer _stopWatchTimer = StopWatchTimer();
   final _isHours = true;
-
   @override
   void initState() {
     super.initState();
@@ -52,7 +51,10 @@ class _recordState extends State<record> {
       password: 'yasser',
     );
     _sshClient = await sshHelper.connect();
+
   }
+
+
   Future<void> _startScript() async {
     name=constants.Name;
     path=constants.location;
@@ -150,8 +152,7 @@ padding: EdgeInsets.only(top: 70),
                         backgroundColor: AppColors.primary,
                         child: IconButton(onPressed: _stopScript,icon: Icon(Icons.stop,color: Colors.white,)),
                       ),
-                    ],
-                  ),
+                    ],),
                 ),
               ],
             ),
