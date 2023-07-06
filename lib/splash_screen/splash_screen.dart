@@ -55,7 +55,7 @@ class _SplshScreenState extends State<SplshScreen> {
                   color: AppColors.primary,
                   fontWeight: FontWeight.bold,
                   fontFamily:  AppStrings.constantFont,
-                  fontSize: 18
+                  fontSize:20
               ),
             ),
             Text('JUST CLICK!',
@@ -63,7 +63,7 @@ class _SplshScreenState extends State<SplshScreen> {
                 fontFamily:  AppStrings.primaryFont,
                   color: Color(0xFF893612),
                   fontWeight: FontWeight.bold,
-                  fontSize: 18
+                  fontSize: 20
               ),
             ),
             SizedBox(
