@@ -1,13 +1,10 @@
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ssh2/ssh2.dart';
-import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:tablet_design/core/utils/app_colors.dart';
 import 'package:tablet_design/core/utils/app_images.dart';
 import 'package:tablet_design/core/utils/app_strings.dart';
-import 'package:ssh2/ssh2.dart';
-import 'package:tablet_design/SSH.dart';
+import 'package:tablet_design/moduls/SSH.dart';
 import 'package:tablet_design/core/utils/constant.dart';
 
 class record_page extends StatefulWidget {

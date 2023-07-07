@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:tablet_design/Record%20Page/Record_page.dart';
 import 'package:tablet_design/Record%20Page/start.dart';
-import 'package:tablet_design/speechAPI.dart';
+import 'package:tablet_design/moduls/speechAPI.dart';
 import 'package:tablet_design/splash_screen/splash_screen.dart';
 import 'package:tablet_design/weather/model/weather.dart';
 import 'package:tablet_design/weather/services/weather_service.dart';
